@@ -9,6 +9,7 @@ Exemple d'un reproductor MP3 GUI (amb interfície gràfica d'usuari) amb Python 
 - python >= 3.8
 - MPD: Music Player Daemon 0.23.5 (0.23.5)
 - MPC: A minimalist command line interface to MPD / mpc version: 0.34
+- tkinter
 
 ## MPD
 https://www.musicpd.org/
@@ -54,6 +55,13 @@ https://www.musicpd.org/doc/mpc/html/
 - mpc ls
 - mpd add /
 - mpc play
+
+## tkinter
+- sudo pacman -S tk
+- sudo pacman -S pyqt5
+- sudo pacman -S pyside2
+- sudo pacman -S python-pillow
+- export DISPLAY=:0; (for ssh console)
 
 ## mpcpy_aleon
 

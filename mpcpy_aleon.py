@@ -32,7 +32,7 @@ import pickle
 #constants ______________________________________________
 AUTOR = "Aleon"
 DIR_MUSIC = '/home/aleon/Music'
-DIR_PLAYLIST = '/home/aleon/Playlist'
+DIR_PLAYLIST = '/home/aleon/playlists'
 FILE_INFO = 'info.txt'
 FILE_ALBUMS = 'albums'
 FILE_ESTAT = 'estat_reproductor.txt'

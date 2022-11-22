@@ -2,7 +2,7 @@
 #Aleix Leon
 
 #imports
-from reproductor_aleon import * #albums, playlists
+from mpcpy_aleon import * #albums, playlists
 from mpc import *
 
 #tkinter ______________________________________________
