@@ -27,15 +27,15 @@ class Reproductor():
     def __init__(self):
 
         #ini reproductor_aleon
-        self.albums = albums
+        self.albums = init()
         self.playlists = llegeix_playlists()
-        self.generes = llegeix_generes(albums)
-        self.autors = llegeix_autors(albums)
-        self.anys = llegeix_anys(albums)
+        self.generes = llegeix_generes(self.albums)
+        self.autors = llegeix_autors(self.albums)
+        self.anys = llegeix_anys(self.albums)
         self.anys.sort()
-        self.cops = llegeix_cops(albums)
+        self.cops = llegeix_cops(self.albums)
         self.cops.sort()
-        self.noms_albums = llegeix_noms_albums(albums)
+        self.noms_albums = llegeix_noms_albums(self.albums)
 
         #var
         self.criteris = ['Gènere','Autor','Anys','Reproduccions']
@@ -73,7 +73,7 @@ class Reproductor():
         self.text_info.grid(row = 0, column = 0) #posició en grid
 
         #inserto funció que retorna str
-        self.text_info.insert(tk.INSERT, str_info(albums))
+        self.text_info.insert(tk.INSERT, str_info(self.albums))
         self.text_info.config(state='disabled')
         
         # schedule an update every 1 second
@@ -234,13 +234,13 @@ class Reproductor():
         print(selected_i[0])
 
         #funció reproductor_aleon
-        load_playlist(self.playlists[int(selected_i[0])], albums)
+        load_playlist(self.playlists[int(selected_i[0])], self.albums)
 
         #play
         self.play()
 
         #update info
-        self.update_info()
+        self.update_info(self.albums)
 
     #FINESTRA add playlist_____________________________________
     def window_add_playlist(self):
@@ -360,21 +360,21 @@ class Reproductor():
             #crea_playlist(val,tipus): tipus = GEN, AUTOR, ...
             #segons tipus, fer llista
             if self.tipus == "GEN":
-                crea_playlist(selected_v,'GEN',albums)
+                crea_playlist(selected_v,'GEN',self.albums)
             elif self.tipus == "AUTOR":
-                crea_playlist(selected_v,'AUTOR',albums)
+                crea_playlist(selected_v,'AUTOR',self.albums)
             elif self.tipus == "ANY":
                 #__listbox múltiple, min i max de listbox2 (intèrval)
                 valors = str(self.anys[min(selected_i)]) + ' ' + str(self.anys[max(selected_i)])
-                crea_playlist(valors,'ANY',albums)
+                crea_playlist(valors,'ANY',self.albums)
             elif self.tipus == "COPS":
                 #__listbox múltiple, min i max de listbox2 (intèrval)
                 valors = str(self.cops[min(selected_i)]) + ' ' + str(self.cops[max(selected_i)])
-                crea_playlist(valors,'COPS',albums)
+                crea_playlist(valors,'COPS',self.albums)
             
             #update
-            self.update()
-            self.update_info
+            self.update(self.albums)
+            self.update_info(self.albums)
 
             #missatge
             self.playlist_ok.insert(tk.INSERT, '* PLAYLIST CREADA OK :)')
@@ -470,10 +470,10 @@ class Reproductor():
         if selected_i:
             #mirar tipus DEL / ADD
             if self.tipus == 'DEL':
-                albums[self.album_item[0]].borra_mp3(selected_i[0])
+                self.albums[self.album_item[0]].borra_mp3(selected_i[0])
             elif self.tipus == 'ADD':
                 #albums[key].recupera_mp3(int(opc)-1)
-                albums[self.album_item[0]].recupera_mp3(selected_i[0])
+                self.albums[self.album_item[0]].recupera_mp3(selected_i[0])
 
             #update album info + llista songs
             self.update_info_album(self.album_item[0])
@@ -492,7 +492,7 @@ class Reproductor():
 
     def update_info_album(self, album):
         #mètode __str__ d'àlbum
-        detall = albums[album].__str__()
+        detall = self.albums[album].__str__()
         print(detall)
 
         #update txt = info àlbum
@@ -516,9 +516,9 @@ class Reproductor():
 
         #control tipus
         if self.tipus == "DEL":
-            songs = albums[self.album_item[0]].mp3
+            songs = self.albums[self.album_item[0]].mp3
         elif self.tipus == "ADD":
-            songs = albums[self.album_item[0]].borrades
+            songs = self.albums[self.album_item[0]].borrades
 
         print(songs)
         #control si hi ha cançons
@@ -530,8 +530,9 @@ class Reproductor():
             self.lsongs['state'] = 'disabled'
     
     #________________________________________________________________
-    def update(self):
+    def update(self, albums):
         #update
+        print('albums in update ', albums)
         self.albums = albums
         self.playlists = llegeix_playlists()
         self.generes = llegeix_generes(albums)
@@ -543,7 +544,7 @@ class Reproductor():
         self.noms_albums = llegeix_noms_albums(albums)
 
     #update text info, borrem i tornem a insertar
-    def update_info(self):
+    def update_info(self, albums):
         self.text_info.config(state='normal')
         self.text_info.delete('1.0', END)
         self.text_info.insert(tk.INSERT, str_info(albums))
@@ -553,7 +554,7 @@ class Reproductor():
     def update_interval(self):
         self.text_info.config(state='normal')
         self.text_info.delete('1.0', END)
-        self.text_info.insert(tk.INSERT, str_info(albums))
+        self.text_info.insert(tk.INSERT, str_info(self.albums))
         self.text_info.config(state='disabled')
         
         # schedule an update every 1 second
@@ -569,7 +570,7 @@ class Reproductor():
             #play
             self.mpc.play()
             #update info
-            self.update_info()
+            self.update_info(self.albums)
     
     def pause(self):
         #parem gif animat de label
@@ -580,30 +581,31 @@ class Reproductor():
         #pause
         self.mpc.pause()
         #update info
-        self.update_info()
+        self.update_info(self.albums)
 
     def prev(self):
         self.mpc.prev()
         self.play()
-        self.update_info()
+        self.update_info(self.albums)
     
     def next(self):
         self.mpc.next()
         self.play()
-        self.update_info()
+        self.update_info(self.albums)
     
     def rand(self):
         self.mpc.random()
-        self.update_info()
+        self.update_info(self.albums)
 
     def reset(self):
-        reset(albums)
-        self.update()
-        self.update_info()
+        albums = reset()
+        print('albums in reset tk ', albums)
+        self.update(albums)
+        self.update_info(albums)
         self.pause()
 
     def exit(self):
-        sortir(albums)
+        sortir(self.albums)
         self.arrel.destroy()
 
     #per evitar tancar amb botó superior X finestra
@@ -619,7 +621,7 @@ class Reproductor():
         #self.arrel.title(s)
         self.barra_volum['label'] = s
         self.mpc.volum_set(value)
-        self.update_info()
+        self.update_info(self.albums)
     
 #per carregar el gif animat
 class ImageLabel(tk.Label):
@@ -665,8 +667,8 @@ class ImageLabel(tk.Label):
 if __name__ == "__main__":
     
     #inicialitzem
-    albums = init()
-    #print(albums)
+    #albums = init()
+    #print('main ', albums)
   
     #ini gràfica
     app = Reproductor()

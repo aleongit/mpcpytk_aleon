@@ -472,7 +472,11 @@ i té com a objectius:
 """
 
 #init_dir(): Aquesta funció només serà cridada per la funció reset()
-def init_dir(albums):
+def init_dir():
+
+    #init albums
+    albums = {}
+
     #recòrrer tots els directoris sota un path
     #print('bases _______________________________')
     for base, dirs, files in os.walk(DIR_MUSIC):
@@ -518,7 +522,7 @@ def init_dir(albums):
     #print(albums)
 
     #Pickling files
-    guarda_pickle(FILE_ALBUMS,albums)
+    guarda_pickle(FILE_ALBUMS, albums)
 
 """
 b) init(): Aquesta funció serà cridada cada cop que s’executi 
@@ -565,7 +569,7 @@ o nous directoris dins la carpeta de música o si s’ha produït algun error.
 . Cridarà la funció init().
 """
 
-def reset(albums):
+def reset():
     #eliminar playlists
     #mpc
     #mpc clear
@@ -582,7 +586,7 @@ def reset(albums):
     os.system(bash) 
 
     #init_dir
-    init_dir(albums)
+    init_dir()
 
     #restart mpd, cal ser root
     #systemctl restart mpd
@@ -593,7 +597,10 @@ def reset(albums):
     os.system('mpc update')
 
     #init
-    init()
+    albums = init()
+    print('reset ', albums)
+
+    return albums
 
 """
 d) sortir(): A l’hora d’aturar el nostre programa Python, aquesta funció ha de:
@@ -764,7 +771,8 @@ if __name__ == "__main__":
                                         if opb != '' and opb != '0':
                                             opb = crea_playlist(opb,'CERCA',albums)
             elif op == 'R':
-                    reset(albums)
+                    albums = reset()
+                    #print('after reset ', albums)
             elif op == '0':
                     sortir(albums)
         else:
