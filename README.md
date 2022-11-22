@@ -61,7 +61,6 @@ https://www.musicpd.org/doc/mpc/html/
 - sudo pacman -S pyqt5
 - sudo pacman -S pyside2
 - sudo pacman -S python-pillow
-- export DISPLAY=:0; (for ssh console)
 
 ## mpcpy_aleon
 
@@ -85,3 +84,6 @@ author
 
 - python3 tk_aleon.py
 
+![Screenshot](img/1.png)
+
+![Screenshot](img/2.png)
