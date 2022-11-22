@@ -39,7 +39,8 @@ class Reproductor():
 
         #var
         self.criteris = ['Gènere','Autor','Anys','Reproduccions']
-        self.tipus = "" #per tipus playlist
+        self.tipus = "" #per tipus playlist, del/add song
+        self.album_item = "" #per guardar àlbum
 
         #objecte mpc
         self.mpc = MPC()
@@ -58,13 +59,9 @@ class Reproductor():
         #títol
         self.arrel.title("WINAMP v2022 by Aleon")
         
-        #font
-        #https://www.geeksforgeeks.org/how-to-set-font-for-text-in-tkinter/
-        
-        # Create an object of type Font from tkinter.
-        self.font1 = font.Font( family = "Consolas", 
-                                        size = 20, 
-                                        weight = "bold")
+        #fonts
+        self.font1 = font.Font( family = "Consolas", size = 16, weight = "bold")
+        self.font2 = font.Font( family = "Consolas", size = 14, weight = "bold")
         
         #frame info
         self.frame_info = Frame(self.arrel, bg = "white", bd = 0, highlightbackground = "black", highlightcolor = "black", highlightthickness = 0)
@@ -72,10 +69,8 @@ class Reproductor():
         #self.frame_info.pack(expand=1)
        
         # info (Text)
-        #self.input_info = Entry(self.frame_info, width=100 ,font = ('Consolas', 22, 'bold'), textvariable = self.input_text, bg = "white", bd = 0, justify = RIGHT, state='disabled', disabledbackground="white", disabledforeground="black", relief=tk.RAISED, borderwidth=1)
-        self.text_info = Text(self.frame_info, width=100 , height=10 ,font = ('Consolas', 24, 'bold'), bg = "white", bd = 0, relief=tk.RAISED, borderwidth=1)
+        self.text_info = Text(self.frame_info, width=100 , height=10 ,font = ('Consolas', 16, 'bold'), bg = "white", bd = 0, relief=tk.RAISED, borderwidth=1)
         self.text_info.grid(row = 0, column = 0) #posició en grid
-        #self.text_info.pack(ipady = 15) #altura
 
         #inserto funció que retorna str
         self.text_info.insert(tk.INSERT, str_info(albums))
@@ -173,9 +168,6 @@ class Reproductor():
         self.l9 = Label(self.btns_frame,text="RESET", font = self.font1, bg='white').grid(row = 3, column = 3, padx = 1, pady = 1)
         self.l0 = Label(self.btns_frame,text="EXIT", font = self.font1, bg='white').grid(row = 3, column = 4, padx = 1, pady = 1)
 
-        #ampliem frame
-        #self.btns_frame.pack(expand=1)
-
         #Disable the Close Window Control Icon
         self.arrel.protocol("WM_DELETE_WINDOW", self.disable_event)
 
@@ -188,7 +180,7 @@ class Reproductor():
             w = 1050 # width for the Tk root
             h = 850 # height for the Tk root
         elif tipus == 'ALBUMS':
-            w = 1850
+            w = 1550
             h = 850 
 
         # get screen width and height
@@ -274,6 +266,7 @@ class Reproductor():
         #missatge
         self.playlist_ok = Text(self.wplaylist, width=100, height=2,font = ('Consolas', 24, 'bold'), bg = "white", fg ="green", bd = 0, relief=tk.RAISED, borderwidth=1)
         self.playlist_ok.pack()
+        self.playlist_ok.config(state='disabled')
 
         #botó crear
         self.crea = Button(self.wplaylist, text='CREAR', 
@@ -332,7 +325,8 @@ class Reproductor():
                 self.update_lb2(self.cops)
             
             print(self.tipus)
-        
+
+    #netegem i afegim la llista a listbox  
     def update_lb2(self, file_list):
           # updates right listbox
           self.lb2.delete(0, END)
@@ -397,29 +391,46 @@ class Reproductor():
         self.walbums.title("* ALBUMS *") #títol
         self.walbums.grab_set() #manté focus a finestra
 
+        #labels fila opcions
+        #frame contenidor
+        self.labels = Frame(self.walbums, width=100, bg = "white")
+        self.labels.pack(fill=tk.X, padx=5, pady=5)
+        self.la = Label(self.labels,text="ALBUMS LIST", font = self.font1, bg='white', width=35).grid(row = 0, column = 1, padx = 1, pady = 1)
+        self.lb = Label(self.labels,text="ALBUM INFO", font = self.font1, bg='white', width=35).grid(row = 0, column = 2, padx = 1, pady = 1)
+        self.lc = Label(self.labels,text="ALBUM SONGS (dclick per DEL/ADD)", font = self.font1, bg='white', width=35).grid(row = 0, column = 3, padx = 1, pady = 1)
+
         #listbox albums
-        self.lalbums = Listbox(self.walbums, font = self.font1, width=50, height=80)
+        self.lalbums = Listbox(self.walbums, font = self.font2, width=40, height=80)
         for i in self.noms_albums:
             self.lalbums.insert(END, i)
         self.lalbums.bind("<<ListboxSelect>>", self.on_select_album)
         self.lalbums.pack(fill=tk.Y, side=tk.LEFT)
 
-        #listbox 2: consulta segons criteris
-        self.linfo = Listbox(self.walbums, font = self.font1, width=50, height=80)
-        self.linfo.bind("<<ListboxSelect>>", self.on_select_info)
-        self.linfo.pack(fill=tk.Y, side=tk.RIGHT)
+        #listbox songs
+        self.lsongs = Listbox(self.walbums, font = self.font2, width=40, height=80, bg = "#f2f2f2")
+        self.lsongs.bind("<Double-1>", self.on_select_song)
+        self.lsongs.pack(fill=tk.Y, side=tk.RIGHT)
 
-        #missatge
-        self.album_ok = Text(self.walbums, width=100, height=20,font = ('Consolas', 24, 'bold'), bg = "white", fg ="green", bd = 0, relief=tk.RAISED, borderwidth=1)
-        self.album_ok.pack()
+        #text info àlbum
+        self.album_info = Text(self.walbums, width=100, height=26, font = self.font2, bg = "#f8f8f8", bd = 0, relief=tk.RAISED, borderwidth=1)
+        self.album_info.pack()
+        self.album_info.config(state='disabled')
 
         #botó del/add song
-        self.del_song = Button(self.walbums, text='BORRAR SONG', 
+        self.del_song = Button(self.walbums, text='- DEL SONG', 
             font = self.font1, width = 100, 
-            fg = "black", bg = "#b8eab8", 
+            fg = "black", bg = "#ec8c8c", 
             activebackground="#b6bbfc", activeforeground="#fff", 
             bd = 0, cursor = "hand2", command = self.borra_song )
         self.del_song.pack()
+
+        #botó del/add song
+        self.add_song = Button(self.walbums, text='+ ADD SONG', 
+            font = self.font1, width = 100, 
+            fg = "black", bg = "#b8eab8", 
+            activebackground="#b6bbfc", activeforeground="#fff", 
+            bd = 0, cursor = "hand2", command = self.add_song )
+        self.add_song.pack()
 
         #botó tancar
         self.tanca = Button(self.walbums, text='TANCAR', 
@@ -429,14 +440,94 @@ class Reproductor():
             bd = 0, cursor = "hand2", command = self.walbums.destroy )
         self.tanca.pack()
 
-    def on_select_album(self):
-        pass
+        #butons desactivats
+        self.del_song['state'] = 'disabled'
+        self.add_song['state'] = 'disabled'
 
-    def on_select_info(self):
-        pass
+    #en seleccionar album de primer listbox
+    def on_select_album(self, event):
+        
+        # get selected indices
+        selected_i = self.lalbums.curselection()
+        print(selected_i)
 
+        if selected_i:
+            # get selected items
+            self.album_item = [self.lalbums.get(i) for i in selected_i]
+            print(self.album_item)
+            print(f'You selected: {self.album_item} index: {selected_i}')
+
+            #update controls, li envio el nom àlbum seleccionat
+            self.update_info_album(self.album_item[0])
+
+    #al seleccionar song
+    def on_select_song(self,event):
+
+        # get selected indices
+        selected_i = self.lsongs.curselection()
+        print(selected_i)
+
+        if selected_i:
+            #mirar tipus DEL / ADD
+            if self.tipus == 'DEL':
+                albums[self.album_item[0]].borra_mp3(selected_i[0])
+            elif self.tipus == 'ADD':
+                #albums[key].recupera_mp3(int(opc)-1)
+                albums[self.album_item[0]].recupera_mp3(selected_i[0])
+
+            #update album info + llista songs
+            self.update_info_album(self.album_item[0])
+            self.update_llista_songs()
+
+    #genera cançons per borrar
     def borra_song(self):
-        pass
+        #genera_menu(albums[self.album_item].mp3)
+        self.tipus = "DEL"
+        self.update_llista_songs()
+
+    def add_song(self):
+        #genera_menu(albums[key].borrades)
+        self.tipus = "ADD"
+        self.update_llista_songs()
+
+    def update_info_album(self, album):
+        #mètode __str__ d'àlbum
+        detall = albums[album].__str__()
+        print(detall)
+
+        #update txt = info àlbum
+        self.album_info.config(state='normal')
+        self.album_info.delete('1.0', END)
+        self.album_info.insert(tk.INSERT, detall)
+        self.album_info.config(state='disabled')
+
+        #borrar list cançons
+        self.lsongs.delete(0, END)
+
+        #butons activats
+        self.del_song['state'] = 'normal'
+        self.add_song['state'] = 'normal'
+
+    def update_llista_songs(self):
+        
+        #neteja listbox
+        self.lsongs['state'] = 'normal'
+        self.lsongs.delete(0, END)
+
+        #control tipus
+        if self.tipus == "DEL":
+            songs = albums[self.album_item[0]].mp3
+        elif self.tipus == "ADD":
+            songs = albums[self.album_item[0]].borrades
+
+        print(songs)
+        #control si hi ha cançons
+        if len(songs) > 0:
+            for song in songs:
+                self.lsongs.insert(END, song)
+        else:
+            self.lsongs.insert(END, 'NO SONGS :(')
+            self.lsongs['state'] = 'disabled'
     
     #________________________________________________________________
     def update(self):
@@ -530,7 +621,6 @@ class Reproductor():
         self.mpc.volum_set(value)
         self.update_info()
     
-
 #per carregar el gif animat
 class ImageLabel(tk.Label):
     """
@@ -580,7 +670,3 @@ if __name__ == "__main__":
   
     #ini gràfica
     app = Reproductor()
-
-
-
-    
