@@ -57,6 +57,10 @@ https://www.musicpd.org/doc/mpc/html/
 - mpc play
 
 ## tkinter
+https://docs.python.org/3/library/tkinter.html
+https://realpython.com/python-gui-tkinter/
+
+(**arch**)
 - sudo pacman -S tk
 - sudo pacman -S pyqt5
 - sudo pacman -S pyside2
