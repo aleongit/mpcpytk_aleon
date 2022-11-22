@@ -1,7 +1,8 @@
 # MPCPy
 
 Exemple d'un reproductor MP3 GUI (amb interfície gràfica d'usuari) amb Python i tkinter, per MPD i MPC de GNU Linux.
-Ús de classes, gestió de llistes de reproducció i fitxers.
+Amb finestra principal, subfinestres, refresc pantalla, control de volum, equalitzador animat, botonera, control ListboxSelect, Double Click, ...
+Ús de  classes, gestió de llistes de reproducció i fitxers.
 
 ## Requeriments
 
