@@ -395,9 +395,9 @@ class Reproductor():
         #frame contenidor
         self.labels = Frame(self.walbums, width=100, bg = "white")
         self.labels.pack(fill=tk.X, padx=5, pady=5)
-        self.la = Label(self.labels,text="ALBUMS LIST", font = self.font1, bg='white', width=35).grid(row = 0, column = 1, padx = 1, pady = 1)
-        self.lb = Label(self.labels,text="ALBUM INFO", font = self.font1, bg='white', width=35).grid(row = 0, column = 2, padx = 1, pady = 1)
-        self.lc = Label(self.labels,text="ALBUM SONGS (dclick per DEL/ADD)", font = self.font1, bg='white', width=35).grid(row = 0, column = 3, padx = 1, pady = 1)
+        self.la = Label(self.labels,text="ALBUMS LIST", font = self.font2, bg='white', width=35).grid(row = 0, column = 1, padx = 1, pady = 1)
+        self.lb = Label(self.labels,text="ALBUM INFO", font = self.font2, bg='white', width=35).grid(row = 0, column = 2, padx = 1, pady = 1)
+        self.lc = Label(self.labels,text="ALBUM SONGS (dclick per DEL/ADD)", font = self.font2, bg='white', width=35).grid(row = 0, column = 3, padx = 1, pady = 1)
 
         #listbox albums
         self.lalbums = Listbox(self.walbums, font = self.font2, width=40, height=80)
