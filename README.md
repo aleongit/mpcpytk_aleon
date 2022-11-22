@@ -5,11 +5,13 @@ Exemple d'un reproductor MP3 GUI (amb interfície gràfica d'usuari) amb Python 
 
 ## Requeriments
 
-- GNU Linux (Arch, Ubuntu)
+- OS: Arch Linux x86_64
+- Kernel: 6.0.9-arch1-1
+- DE: GNOME 43.1
 - python >= 3.8
 - MPD: Music Player Daemon 0.23.5 (0.23.5)
 - MPC: A minimalist command line interface to MPD / mpc version: 0.34
-- tkinter
+- tkinter 8.6.12
 
 ## MPD
 https://www.musicpd.org/
