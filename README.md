@@ -13,6 +13,7 @@ Amb finestra principal, subfinestres, refresc pantalla, control de volum, equali
 - MPD: Music Player Daemon 0.23.5 (0.23.5)
 - MPC: A minimalist command line interface to MPD / mpc version: 0.34
 - tkinter 8.6.12
+- Pillow
 
 ## setup environment: pyenv and venv
 - https://github.com/pyenv/pyenv
@@ -69,7 +70,7 @@ Python 3.10.4
 ```
 - install dependencies in venv
 ```
-pip install [package]
+pip install Pillow
 ```
 
 ## MPD
